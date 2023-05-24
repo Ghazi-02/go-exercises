@@ -4,6 +4,7 @@ import (
 	"encoding/csv"
 	"fmt"
 	"os"
+	"time"
 )
 
 func readFile(f string) [][]string {
@@ -30,19 +31,30 @@ func main() {
 		quizFile = "problems.csv"
 	}
 	problems := readFile(quizFile)
+	clock := time.After(5 * time.Second)
 	var correct int
-	for i := range problems {
+	for _, v := range problems {
+		fmt.Println("Solve", v[0])
+		var c chan string = make(chan string)
+		go func() {
+			var input string
+			fmt.Scanf("%s\n", &input)
+			c <- input
+		}()
 
-		
-		fmt.Println("Solve",problems[i][0])
-		var input string
-		fmt.Scanf("%s\n", &input)
-		if input == problems[i][1] {
-			correct += 1
+		select {
+		case <-clock:
+			fmt.Println("End of quiz, too slow")
+			fmt.Print("You got ", correct, "/", len(problems))
+			os.Exit(0)
+
+		case answer := <-c:
+			if answer == v[1] {
+				correct += 1
+			}
 		}
-
 	}
-	fmt.Print("You got ",correct, "/", len(problems))
+	fmt.Print("You got ", correct, "/", len(problems))
 	os.Exit(0)
 
 }
