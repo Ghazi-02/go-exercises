@@ -1,1 +1,1 @@
-A CLI  quiz game
+A CLI  quiz game, that reads data from a csv file
