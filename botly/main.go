@@ -15,6 +15,27 @@ type Link struct {
 
 var linkMap = make(map[string]string)
 
+func writeToJson(m map[string]string){
+	jsonData,err:= json.Marshal(m)
+	if err != nil {
+		log.Fatal(err)
+	}
+	filePath := "linkMap.json"
+	err = os.WriteFile(filePath,jsonData,0644)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+func readFromJson(){
+	filePath := "linkMap.json"
+	data, err := os.ReadFile(filePath)
+	if err!= nil {
+		log.Fatal(err)
+	}
+	err = json.Unmarshal(data,&linkMap)
+	fmt.Print("printing linkMap.json",linkMap)
+}
+
 func formHandler(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == "POST" {
@@ -28,15 +49,8 @@ func formHandler(w http.ResponseWriter, r *http.Request) {
 			fmt.Fprint(w,"<div>Your link: <div>",k,"<div> Directs to:</div> ",v)
 			fmt.Fprint(w,"<p></p>")
 		}	
-		jsonData,err:= json.Marshal(linkMap)
-		if err != nil {
-			log.Fatal(err)
-		}
-		filePath := "linkMap.json"
-		err = os.WriteFile(filePath,jsonData,0644)
-		if err != nil {
-			log.Fatal(err)
-		}
+		writeToJson(linkMap)
+		
 	}
 
 	http.ServeFile(w, r, "index.html")
@@ -45,7 +59,8 @@ func formHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 func main() {
-
+	linkMap = make(map[string]string)
+	readFromJson()
 	http.HandleFunc("/", formHandler)
 	fmt.Println("Running on PORT: 8080 ...")
 	http.ListenAndServe(":8080", nil)

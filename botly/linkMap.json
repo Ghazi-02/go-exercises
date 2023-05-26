@@ -1,1 +1,1 @@
-{"localhost:8080/gpt":"https://openai.com/blog/chatgpt","localhost:8080/test":"https://stackoverflow.com/questions/33300868/go-http-panic-serving"}
+{"localhost:8080/gpt":"https://openai.com/blog/chatgpt","localhost:8080/json":"https://pkg.go.dev/encoding/json#Marshal","localhost:8080/test":"https://stackoverflow.com/questions/33300868/go-http-panic-serving"}
